@@ -17,6 +17,7 @@ import {
   ApiStandardErrors,
   type PaginatedResult,
   ParseUuidPipe,
+  Public,
 } from '../../common';
 import {
   CreateRequestDto,
@@ -27,6 +28,7 @@ import {
 import { RequestsService } from './requests.service';
 
 @ApiTags('requests')
+@Public()
 @Controller('requests')
 export class RequestsController {
   constructor(private readonly requestsService: RequestsService) {}

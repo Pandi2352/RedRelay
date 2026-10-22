@@ -8,6 +8,10 @@ export const envSchema = z.object({
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   MONGODB_URI: z.string().min(1),
   REDIS_URL: z.string().min(1),
+  JWT_ACCESS_SECRET: z.string().min(8).default('super-secret-jwt-access-key-32-chars-long!'),
+  JWT_ACCESS_EXPIRES_IN: z.string().default('15m'),
+  JWT_REFRESH_SECRET: z.string().min(8).default('super-secret-jwt-refresh-key-32-chars-long!'),
+  JWT_REFRESH_EXPIRES_IN: z.string().default('7d'),
 });
 
 export type Env = z.infer<typeof envSchema>;

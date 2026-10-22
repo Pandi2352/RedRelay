@@ -17,11 +17,13 @@ import {
   ApiStandardErrors,
   type PaginatedResult,
   ParseUuidPipe,
+  Public,
 } from '../../common';
 import { CreateHospitalDto, HospitalResponseDto, QueryHospitalsDto, UpdateHospitalDto } from './dto';
 import { HospitalsService } from './hospitals.service';
 
 @ApiTags('hospitals')
+@Public()
 @Controller('hospitals')
 export class HospitalsController {
   constructor(private readonly hospitalsService: HospitalsService) {}
