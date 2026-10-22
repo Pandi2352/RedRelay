@@ -43,7 +43,7 @@ These are done, so Sprints 1 and 2 have spare capacity. Pull in work from the ne
 | S1-5 | Done (`BaseRepository`, `baseSchemaOptions`, pagination DTOs and utils) |
 | S1-8 | Test helpers and health e2e done; hospitals e2e comes with S1-7 |
 | S2-1 | Done (`cn`, theme, fonts, lint boundaries) |
-| S2-2 | Partly done: Button, Card, Skeleton, EmptyState, ErrorState, Spinner, PageHeader |
+| S2-2 | Done (Button, IconButton, Input, Select, Textarea, Field, Card, Badge, Skeleton, EmptyState, ErrorState, Spinner, PageHeader) |
 | S2-3, S2-4 | Done (store, router, providers, AppShell, theme toggle, `api:types`) |
 | S2-7 | CI workflow and Dockerfile done; deploy still to do |
 
