@@ -1,0 +1,101 @@
+# RedRelay — Agent Instructions
+
+Single source of truth for every coding agent (Claude Code, Antigravity, others).
+`CLAUDE.md` imports this file; `.agent/rules/` is generated from it by `scripts/sync-agents.mjs`.
+Edit **this file**, then run `node scripts/sync-agents.mjs`.
+
+## What we are building
+
+RedRelay is a real-time emergency blood donor network. A verified hospital posts an urgent
+blood request; the dispatch engine finds eligible donors nearby, alerts them in widening waves,
+confirms exactly the units needed, and tracks each donor until the donation is recorded.
+
+Full product and architecture docs: [docs/README.md](docs/README.md).
+
+## Repository layout
+
+```
+RedRelay/
+├── frontend/        React 19 + Vite + TypeScript + Tailwind v4 + Redux Toolkit (RTK Query) + React Router
+├── backend/         NestJS + TypeScript + MongoDB (Mongoose) + Swagger
+├── docs/            Product, architecture, design system, roadmap, ADRs
+├── .claude/         Claude Code skills + subagents (canonical)
+├── .agent/          Antigravity rules, skills, workflows (generated — do not hand-edit)
+└── scripts/         Repo tooling (agent config sync)
+```
+
+## Non-negotiable rules
+
+### 1. Reuse first, then build
+- Before writing any function, component, hook, pipe, guard, or config, search `frontend/src/shared`
+  and `backend/src/common` for an existing one. Extend it instead of duplicating it.
+- Anything that is not RedRelay-specific goes in the **shared/common layer** so it can be copied to
+  the next project unchanged: UI primitives, form fields, hooks, formatters, HTTP client, pagination,
+  error handling, guards, interceptors, config loaders, base repository, test helpers.
+- Domain code (donors, requests, dispatch, hospitals) lives in `features/` (web) and `modules/` (api)
+  and depends on shared — never the other way round.
+- Second time you write similar code, extract it. Do not wait for a third.
+
+### 2. Small files, one job each
+- One component / service / hook / util per file. Soft limit **150 lines**, hard limit **250**.
+- No barrel file that re-exports the whole app; one `index.ts` per folder is fine.
+- No magic strings or numbers: put them in `constants/` (enums, limits, timeouts, route paths, query keys).
+- No inline config: env and settings come from typed config modules only.
+
+### 3. TypeScript
+- `strict: true` everywhere. No `any`; use `unknown` and narrow. No non-null `!` unless proven.
+- Shared types: `frontend/src/shared/types` and `backend/src/common/types`. API DTO shapes are
+  generated from Swagger (`npm run api:types` in frontend) — never hand-copy them.
+- Named exports only (except where a framework requires default, e.g. route lazy pages).
+
+### 4. UI rules (details in the `redrelay-ui` skill and `docs/09-design-system.md`)
+- Corner radius: **`rounded-md` everywhere**. Only exception: `rounded-full` for avatars, status dots,
+  and the toggle thumb. No `rounded-lg/xl/2xl`.
+- **No shadows.** Separate surfaces with a 1px border or a background step. The theme deletes the
+  shadow utilities so `shadow-*` will not compile.
+- **No unwanted padding.** Use the spacing scale in the design doc; dense by default
+  (`p-3`/`p-4` for panels, `gap-2`/`gap-3` inside, `py-2 px-3` for controls). Never stack padding on
+  nested wrappers — the outer layout owns the gutter.
+- Colors and fonts only through tokens (`bg-primary`, `text-fg-muted`, `font-display`). No hex values,
+  no raw Tailwind palette colors (`bg-red-600`) in components.
+- Every interactive element has visible keyboard focus, and every screen has loading, empty and error states.
+
+### 5. Backend rules (details in the `nest-module` skill)
+- Module layout: `controller` (HTTP only) → `service` (business logic) → `repository` (Mongo only).
+- Every endpoint: DTO with `class-validator`, Swagger decorators, auth guard + role decorator, typed response.
+- Business rules that matter (eligibility, compatibility, dispatch state machine) are **pure functions**
+  in `*.rules.ts` / `*.policy.ts` with unit tests.
+- Concurrency-sensitive writes use atomic Mongo updates (`findOneAndUpdate` with conditions), never read-then-write.
+- Never expose donor home location or contact details until that donor has accepted.
+
+### 6. Free resources only
+Every service must have a free tier or be self-hostable. See `docs/03-tech-stack.md` before adding a dependency or service.
+Do not add a paid SaaS, and prefer one well-known library over three small ones.
+
+### 7. Workflow
+- Read the relevant doc in `docs/` before starting a feature; update it when behavior changes.
+- Record a real architectural decision as an ADR in `docs/adr/`.
+- Run lint, typecheck, and tests for the app you touched before saying a task is done.
+- Conventional commits: `feat(api): ...`, `fix(web): ...`, `docs: ...`, `chore: ...`.
+
+## Commands
+
+| Where | Command | What |
+|---|---|---|
+| frontend | `npm run dev` | Vite dev server (5173) |
+| frontend | `npm run lint && npm run typecheck && npm test` | Quality gate |
+| frontend | `npm run api:types` | Regenerate API types from backend Swagger JSON |
+| backend | `npm run start:dev` | Nest in watch mode (3000), Swagger at `/docs` |
+| backend | `npm run lint && npm run typecheck && npm test` | Quality gate |
+| root | `docker compose up -d` | Local MongoDB + Redis |
+| root | `node scripts/sync-agents.mjs` | Regenerate Antigravity config from `.claude/` and this file |
+
+## Skills available
+
+| Skill | Use when |
+|---|---|
+| `redrelay-ui` | Building or changing any screen, component, color, font, or layout |
+| `react-feature` | Adding a frontend feature, page, slice, API endpoint, form, or hook |
+| `nest-module` | Adding a backend module, endpoint, schema, guard, queue job, or gateway |
+| `reusable-code` | Deciding where code belongs, extracting shared code, or reviewing for duplication |
+| `domain-rules` | Touching eligibility, blood compatibility, dispatch waves, or request states |

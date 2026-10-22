@@ -1,0 +1,1 @@
+export { statusRoutes } from './routes';
