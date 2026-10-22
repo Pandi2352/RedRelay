@@ -6,6 +6,7 @@ import { DatabaseModule } from './infra/database/database.module';
 import { LoggerModule } from './infra/logger/logger.module';
 import { HealthModule } from './modules/health/health.module';
 import { HospitalsModule } from './modules/hospitals';
+import { RequestsModule } from './modules/requests';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { HospitalsModule } from './modules/hospitals';
     CommonModule,
     HealthModule,
     HospitalsModule,
+    RequestsModule,
   ],
 })
 export class AppModule {}

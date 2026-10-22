@@ -5,7 +5,7 @@ import { ArrayMaxSize, ArrayMinSize, Equals, IsArray, IsNumber } from 'class-val
 export class GeoPointDto {
   @ApiProperty({ enum: ['Point'], default: 'Point', example: 'Point' })
   @Equals('Point')
-  type: 'Point' = 'Point';
+  type = 'Point' as const;
 
   @ApiProperty({
     type: [Number],

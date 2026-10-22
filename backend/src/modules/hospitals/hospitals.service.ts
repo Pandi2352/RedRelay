@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import type { FilterQuery, UpdateQuery } from 'mongoose';
+import type { FilterQuery } from 'mongoose';
 import { AppException, type PaginatedResult } from '../../common';
 import type { CreateHospitalDto, QueryHospitalsDto, UpdateHospitalDto } from './dto';
 import { HospitalResponseDto } from './dto/hospital-response.dto';
@@ -74,7 +74,7 @@ export class HospitalsService {
       }
     }
 
-    const updated = await this.repository.updateById(id, { $set: updateDoc } as UpdateQuery<Hospital>);
+    const updated = await this.repository.updateById(id, { $set: updateDoc });
     if (!updated) {
       throw new AppException(HttpStatus.NOT_FOUND, HOSPITAL_ERROR_CODES.HOSPITAL_NOT_FOUND, 'Hospital not found.');
     }

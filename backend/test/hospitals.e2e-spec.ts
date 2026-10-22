@@ -1,6 +1,16 @@
 import request from 'supertest';
 import type { App } from 'supertest/types';
+import type { HospitalResponseDto } from '../src/modules/hospitals/dto/hospital-response.dto';
 import { createTestApp, type TestApp } from './utils/create-test-app';
+
+interface EnvelopedData<T> {
+  data: T;
+  meta?: {
+    page: number;
+    limit: number;
+    total: number;
+  };
+}
 
 describe('Hospitals (e2e)', () => {
   let testApp: TestApp;
@@ -24,7 +34,7 @@ describe('Hospitals (e2e)', () => {
     contactPhone: '+91 44 2829 0200',
   };
 
-  let createdId: string;
+  let createdId = '';
 
   it('POST /api/v1/hospitals creates a new hospital', async () => {
     const res = await request(testApp.app.getHttpServer() as App)
@@ -32,8 +42,9 @@ describe('Hospitals (e2e)', () => {
       .send(validHospitalPayload)
       .expect(201);
 
-    expect(res.body).toHaveProperty('data');
-    expect(res.body.data).toMatchObject({
+    const body = res.body as EnvelopedData<HospitalResponseDto>;
+    expect(body).toHaveProperty('data');
+    expect(body.data).toMatchObject({
       name: validHospitalPayload.name,
       type: validHospitalPayload.type,
       address: validHospitalPayload.address,
@@ -44,8 +55,8 @@ describe('Hospitals (e2e)', () => {
         documents: [],
       },
     });
-    expect(res.body.data.id).toBeDefined();
-    createdId = res.body.data.id;
+    expect(body.data.id).toBeDefined();
+    createdId = body.data.id;
   });
 
   it('POST /api/v1/hospitals fails with 400 on invalid payload', async () => {
@@ -66,11 +77,12 @@ describe('Hospitals (e2e)', () => {
       .get('/api/v1/hospitals?page=1&limit=10')
       .expect(200);
 
-    expect(res.body).toHaveProperty('data');
-    expect(res.body).toHaveProperty('meta');
-    expect(Array.isArray(res.body.data)).toBe(true);
-    expect(res.body.data.length).toBeGreaterThanOrEqual(1);
-    expect(res.body.meta).toMatchObject({
+    const body = res.body as EnvelopedData<HospitalResponseDto[]>;
+    expect(body).toHaveProperty('data');
+    expect(body).toHaveProperty('meta');
+    expect(Array.isArray(body.data)).toBe(true);
+    expect(body.data.length).toBeGreaterThanOrEqual(1);
+    expect(body.meta).toMatchObject({
       page: 1,
       limit: 10,
     });
@@ -81,7 +93,8 @@ describe('Hospitals (e2e)', () => {
       .get(`/api/v1/hospitals/${createdId}`)
       .expect(200);
 
-    expect(res.body.data).toMatchObject({
+    const body = res.body as EnvelopedData<HospitalResponseDto>;
+    expect(body.data).toMatchObject({
       id: createdId,
       name: validHospitalPayload.name,
     });
@@ -96,7 +109,8 @@ describe('Hospitals (e2e)', () => {
       })
       .expect(200);
 
-    expect(res.body.data).toMatchObject({
+    const body = res.body as EnvelopedData<HospitalResponseDto>;
+    expect(body.data).toMatchObject({
       id: createdId,
       name: 'Apollo Main Hospital',
       verification: {
