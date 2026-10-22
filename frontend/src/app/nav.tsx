@@ -5,7 +5,7 @@ import { NavItem } from '@/shared/layouts';
 
 export function Brand() {
   return (
-    <Link to={ROUTES.home} className="font-display text-lg font-semibold text-primary">
+    <Link to={ROUTES.requests} className="font-display text-lg font-semibold text-primary">
       {env.appName}
     </Link>
   );
@@ -14,7 +14,8 @@ export function Brand() {
 export function MainNav() {
   return (
     <>
-      <NavItem to={ROUTES.home} label="Requests" />
+      <NavItem to={ROUTES.requests} label="Requests" />
+      <NavItem to={ROUTES.hospitals} label="Hospitals" />
       <NavItem to={ROUTES.status} label="Status" />
     </>
   );

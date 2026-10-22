@@ -45,6 +45,7 @@ These are done, so Sprints 1 and 2 have spare capacity. Pull in work from the ne
 | S2-1 | Done (`cn`, theme, fonts, lint boundaries) |
 | S2-2 | Done (Button, IconButton, Input, Select, Textarea, Field, Card, Badge, Skeleton, EmptyState, ErrorState, Spinner, PageHeader) |
 | S2-3, S2-4 | Done (store, router, providers, AppShell, theme toggle, `api:types`) |
+| S2-6 | Done (Hospitals and requests features: list, create, and detail pages using RTK Query) |
 | S2-7 | CI workflow and Dockerfile done; deploy still to do |
 
 ## Milestones

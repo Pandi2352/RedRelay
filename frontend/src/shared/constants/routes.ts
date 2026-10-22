@@ -2,4 +2,10 @@
 export const ROUTES = {
   home: '/',
   status: '/status',
+  hospitals: '/hospitals',
+  hospitalNew: '/hospitals/new',
+  hospitalDetail: (id: string) => `/hospitals/${id}` as const,
+  requests: '/requests',
+  requestNew: '/requests/new',
+  requestDetail: (id: string) => `/requests/${id}` as const,
 } as const;
