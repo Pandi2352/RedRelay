@@ -23,7 +23,7 @@ export class HospitalsService {
       location: dto.location,
       contactPhone: dto.contactPhone,
     });
-    return created as HospitalResponseDto;
+    return created;
   }
 
   async findAll(query: QueryHospitalsDto): Promise<PaginatedResult<HospitalResponseDto>> {
@@ -42,7 +42,7 @@ export class HospitalsService {
     }
 
     const result = await this.repository.paginate(filter, query);
-    return result as PaginatedResult<HospitalResponseDto>;
+    return result;
   }
 
   async findById(id: string): Promise<HospitalResponseDto> {
@@ -50,7 +50,7 @@ export class HospitalsService {
     if (!hospital) {
       throw new AppException(HttpStatus.NOT_FOUND, HOSPITAL_ERROR_CODES.HOSPITAL_NOT_FOUND, 'Hospital not found.');
     }
-    return hospital as HospitalResponseDto;
+    return hospital;
   }
 
   async update(id: string, dto: UpdateHospitalDto): Promise<HospitalResponseDto> {
@@ -79,7 +79,7 @@ export class HospitalsService {
       throw new AppException(HttpStatus.NOT_FOUND, HOSPITAL_ERROR_CODES.HOSPITAL_NOT_FOUND, 'Hospital not found.');
     }
 
-    return updated as HospitalResponseDto;
+    return updated;
   }
 
   async remove(id: string): Promise<void> {

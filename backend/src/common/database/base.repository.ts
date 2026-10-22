@@ -1,14 +1,14 @@
-import type { FilterQuery, Model, SortOrder, Types, UpdateQuery } from 'mongoose';
+import type { FilterQuery, Model, SortOrder, UpdateQuery } from 'mongoose';
 import type { PaginatedResult } from '../types';
 import { createPaginatedResult, toSkip, type PageRequest } from '../utils/pagination.util';
 
-/** Plain object returned by repositories: the document fields plus a string `id`. */
-export type Entity<T> = T & { id: string };
+/** Plain object returned by repositories: document fields without `_id`, plus a string UUID `id`. */
+export type Entity<T> = Omit<T, '_id'> & { id: string };
 
-type LeanDoc<T> = T & { _id: Types.ObjectId };
+export type LeanDoc<T> = T & { _id: string };
 
 /**
- * Generic Mongo access. Module repositories extend it and add their own queries.
+ * Generic Mongo access using UUID string identifiers.
  * Always returns lean plain objects, never hydrated documents.
  */
 export abstract class BaseRepository<T extends object> {
@@ -56,6 +56,6 @@ export abstract class BaseRepository<T extends object> {
   }
 
   protected toEntity({ _id, ...rest }: LeanDoc<T>): Entity<T> {
-    return { ...(rest as unknown as T), id: _id.toString() };
+    return { ...(rest as unknown as T), id: String(_id) };
   }
 }

@@ -1,15 +1,16 @@
 import { HttpStatus } from '@nestjs/common';
-import { AppException } from '../../../common';
+import { AppException, type Entity } from '../../../common';
 import { HOSPITAL_ERROR_CODES, HOSPITAL_TYPES, VERIFICATION_STATUSES } from '../hospitals.constants';
 import { HospitalsRepository } from '../hospitals.repository';
 import { HospitalsService } from '../hospitals.service';
+import type { Hospital } from '../schemas/hospital.schema';
 
 describe('HospitalsService', () => {
   let service: HospitalsService;
   let repository: jest.Mocked<HospitalsRepository>;
 
-  const mockHospital = {
-    id: '6717a66b9319808a287c8e91',
+  const mockHospital: Entity<Hospital> = {
+    id: 'c6a99723-5e92-4114-8777-628b067d559a',
     name: 'City Care Hospital',
     type: HOSPITAL_TYPES.HOSPITAL,
     address: '100 Medical Center Way, Chennai',

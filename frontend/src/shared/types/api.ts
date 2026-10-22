@@ -21,5 +21,6 @@ export interface ApiErrorBody {
     message: string;
     details: { field?: string; message: string }[];
     requestId?: string;
+    timestamp?: string;
   };
 }

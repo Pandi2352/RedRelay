@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import type { Model, Types } from 'mongoose';
-import { BaseRepository, type Entity } from '../../common';
+import type { Model } from 'mongoose';
+import { BaseRepository, type Entity, type LeanDoc } from '../../common';
 import { Hospital } from './schemas/hospital.schema';
 
 @Injectable()
@@ -24,7 +24,7 @@ export class HospitalsRepository extends BaseRepository<Hospital> {
           },
         },
       })
-      .lean<Array<Hospital & { _id: Types.ObjectId }>>()
+      .lean<LeanDoc<Hospital>[]>()
       .exec();
 
     return docs.map((doc) => this.toEntity(doc));

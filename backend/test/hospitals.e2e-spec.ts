@@ -1,6 +1,7 @@
 import request from 'supertest';
 import type { App } from 'supertest/types';
 import type { HospitalResponseDto } from '../src/modules/hospitals/dto/hospital-response.dto';
+import { isValidUuid } from '../src/common';
 import { createTestApp, type TestApp } from './utils/create-test-app';
 
 interface EnvelopedData<T> {
@@ -56,6 +57,7 @@ describe('Hospitals (e2e)', () => {
       },
     });
     expect(body.data.id).toBeDefined();
+    expect(isValidUuid(body.data.id)).toBe(true);
     createdId = body.data.id;
   });
 

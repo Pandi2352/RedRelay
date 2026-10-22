@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import { ERROR_CODE_BY_STATUS, ERROR_CODES } from '../constants';
 import { AppException } from '../exceptions/app.exception';
 import type { ApiErrorBody } from '../types';
+import { createErrorEnvelope } from '../utils/response.util';
 
 /** Converts every thrown error into the standard { error: { code, message, details, requestId } } body. */
 @Catch()
@@ -16,12 +17,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const status: number =
       exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
-    const body: ApiErrorBody = {
-      error: {
-        ...this.describe(exception, status),
-        requestId: request.id === undefined ? undefined : String(request.id),
-      },
-    };
+    const desc = this.describe(exception, status);
+    const requestId = request.id === undefined ? undefined : String(request.id);
+    const body: ApiErrorBody = createErrorEnvelope(desc.code, desc.message, desc.details, requestId);
 
     if (status >= 500) {
       this.logger.error(exception instanceof Error ? exception.stack : exception);

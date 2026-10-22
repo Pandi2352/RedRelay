@@ -16,7 +16,9 @@ Ask in order and stop at the first yes:
    parameter or variant instead of copying it.
 2. **Would a different app (a shop, a clinic queue) use it unchanged?** → `shared/*` (web) or `common/*` (api).
    Examples: `cn`, `formatDistance`, `useDebounce`, `Button`, `Field`, `PaginationQueryDto`, `BaseRepository`,
-   `hmacSign`, `retryWithBackoff`, `RolesGuard`, `ResponseEnvelopeInterceptor`.
+   `BaseSchema`, `generateUuid`, `isValidUuid`, `ParseUuidPipe`, `HTTP_STATUS`, `createSuccessEnvelope`,
+   `createErrorEnvelope`, `createLogger`, `setupSwagger`, `hmacSign`, `retryWithBackoff`, `RolesGuard`,
+   `ResponseEnvelopeInterceptor`.
 3. **Does it talk to an outside service?** → `backend/src/infra/<service>` behind an interface
    (`MailService`, `StorageService`), so the provider can be swapped (Resend ↔ Brevo) by config.
 4. **Is it RedRelay logic used by several features/modules?** → the owning feature/module exports it

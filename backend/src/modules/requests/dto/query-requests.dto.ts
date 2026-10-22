@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsMongoId, IsOptional } from 'class-validator';
+import { IsEnum, IsOptional, IsUUID } from 'class-validator';
 import { PaginationQueryDto } from '../../../common';
 import {
   BLOOD_GROUPS,
@@ -11,9 +11,9 @@ import {
 } from '../requests.constants';
 
 export class QueryRequestsDto extends PaginationQueryDto {
-  @ApiPropertyOptional({ description: 'Filter by hospital MongoDB ObjectId.' })
+  @ApiPropertyOptional({ description: 'Filter by hospital UUID.' })
   @IsOptional()
-  @IsMongoId()
+  @IsUUID()
   hospitalId?: string;
 
   @ApiPropertyOptional({ enum: Object.values(REQUEST_STATUSES) })

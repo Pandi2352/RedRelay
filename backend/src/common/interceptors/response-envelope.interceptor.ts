@@ -2,7 +2,9 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nes
 import { map, type Observable } from 'rxjs';
 import { isPaginatedResult } from '../utils/pagination.util';
 
-/** Wraps handler results as { data } or, for paginated results, { data, meta }. */
+import { createSuccessEnvelope } from '../utils/response.util';
+
+/** Wraps handler results into the uniform { data, meta? } envelope. */
 @Injectable()
 export class ResponseEnvelopeInterceptor implements NestInterceptor {
   intercept(_context: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> {
@@ -10,7 +12,9 @@ export class ResponseEnvelopeInterceptor implements NestInterceptor {
       .handle()
       .pipe(
         map((result) =>
-          isPaginatedResult(result) ? { data: result.items, meta: result.meta } : { data: result ?? null },
+          isPaginatedResult(result)
+            ? createSuccessEnvelope(result.items, result.meta)
+            : createSuccessEnvelope(result ?? null),
         ),
       );
   }

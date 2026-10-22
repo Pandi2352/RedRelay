@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { Types, type FilterQuery } from 'mongoose';
+import type { FilterQuery } from 'mongoose';
 import { AppException, type PaginatedResult } from '../../common';
 import { HospitalsService } from '../hospitals/hospitals.service';
 import { VERIFICATION_STATUSES } from '../hospitals/hospitals.constants';
@@ -38,7 +38,7 @@ export class RequestsService {
     }
 
     const created = await this.repository.create({
-      hospitalId: new Types.ObjectId(dto.hospitalId),
+      hospitalId: dto.hospitalId,
       bloodGroup: dto.bloodGroup,
       unitsNeeded: dto.unitsNeeded,
       urgency: dto.urgency ?? REQUEST_URGENCIES.NORMAL,
@@ -52,14 +52,14 @@ export class RequestsService {
       currentWave: 0,
     });
 
-    return created as unknown as RequestResponseDto;
+    return created;
   }
 
   async findAll(query: QueryRequestsDto): Promise<PaginatedResult<RequestResponseDto>> {
     const filter: FilterQuery<BloodRequest> = {};
 
     if (query.hospitalId) {
-      filter.hospitalId = new Types.ObjectId(query.hospitalId);
+      filter.hospitalId = query.hospitalId;
     }
 
     if (query.status) {
@@ -75,7 +75,7 @@ export class RequestsService {
     }
 
     const result = await this.repository.paginate(filter, query);
-    return result as unknown as PaginatedResult<RequestResponseDto>;
+    return result;
   }
 
   async findById(id: string): Promise<RequestResponseDto> {
@@ -87,7 +87,7 @@ export class RequestsService {
         'Blood request not found.',
       );
     }
-    return request as unknown as RequestResponseDto;
+    return request;
   }
 
   async update(id: string, dto: UpdateRequestDto): Promise<RequestResponseDto> {
@@ -123,7 +123,7 @@ export class RequestsService {
       );
     }
 
-    return updated as unknown as RequestResponseDto;
+    return updated;
   }
 
   async confirmUnit(id: string): Promise<RequestResponseDto> {
@@ -143,10 +143,10 @@ export class RequestsService {
 
     if (targetStatus !== confirmed.status) {
       const updated = await this.repository.updateById(id, { $set: { status: targetStatus } });
-      return (updated ?? confirmed) as unknown as RequestResponseDto;
+      return updated ?? confirmed;
     }
 
-    return confirmed as unknown as RequestResponseDto;
+    return confirmed;
   }
 
   async remove(id: string): Promise<void> {

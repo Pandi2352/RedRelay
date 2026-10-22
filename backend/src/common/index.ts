@@ -4,6 +4,8 @@ export * from './database';
 export * from './decorators';
 export * from './dto';
 export * from './exceptions/app.exception';
+export * from './logger';
 export * from './pipes/parse-object-id.pipe';
+export * from './pipes/parse-uuid.pipe';
 export * from './types';
 export * from './utils';

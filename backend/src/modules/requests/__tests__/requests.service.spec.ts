@@ -1,5 +1,4 @@
 import { HttpStatus } from '@nestjs/common';
-import { Types } from 'mongoose';
 import type { Entity } from '../../../common';
 import { VERIFICATION_STATUSES } from '../../hospitals/hospitals.constants';
 import { HospitalsService } from '../../hospitals/hospitals.service';
@@ -17,8 +16,8 @@ describe('RequestsService', () => {
   let repository: jest.Mocked<RequestsRepository>;
   let hospitalsService: jest.Mocked<HospitalsService>;
 
-  const hospitalId = '6717a66b9319808a287c8e91';
-  const requestId = '6717a66b9319808a287c8e92';
+  const hospitalId = 'c6a99723-5e92-4114-8777-628b067d559a';
+  const requestId = 'e4b11234-5e92-4114-8777-628b067d559b';
   const hospitalLocation = {
     type: 'Point' as const,
     coordinates: [80.2707, 13.0827] as [number, number],
@@ -41,7 +40,7 @@ describe('RequestsService', () => {
 
   const mockRequest: Entity<BloodRequest> = {
     id: requestId,
-    hospitalId: new Types.ObjectId(hospitalId),
+    hospitalId: hospitalId,
     bloodGroup: 'O-',
     acceptCompatible: true,
     unitsNeeded: 2,
@@ -53,6 +52,8 @@ describe('RequestsService', () => {
     patientRef: 'ICU-4',
     note: 'Urgent',
     location: hospitalLocation,
+    createdAt: new Date('2026-10-22T10:00:00.000Z'),
+    updatedAt: new Date('2026-10-22T10:00:00.000Z'),
   };
 
   beforeEach(() => {
@@ -89,7 +90,7 @@ describe('RequestsService', () => {
       expect(hospitalsService.findById).toHaveBeenCalledWith(hospitalId);
       expect(repository.create).toHaveBeenCalledWith(
         expect.objectContaining({
-          hospitalId: new Types.ObjectId(hospitalId),
+          hospitalId: hospitalId,
           bloodGroup: 'O-',
           unitsNeeded: 2,
           location: hospitalLocation,

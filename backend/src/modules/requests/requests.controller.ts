@@ -16,7 +16,7 @@ import {
   ApiPaginatedResponse,
   ApiStandardErrors,
   type PaginatedResult,
-  ParseObjectIdPipe,
+  ParseUuidPipe,
 } from '../../common';
 import {
   CreateRequestDto,
@@ -51,7 +51,7 @@ export class RequestsController {
   @ApiOperation({ summary: 'Get blood request details by ID' })
   @ApiEnvelopedResponse(RequestResponseDto)
   @ApiStandardErrors()
-  findById(@Param('id', ParseObjectIdPipe) id: string): Promise<RequestResponseDto> {
+  findById(@Param('id', ParseUuidPipe) id: string): Promise<RequestResponseDto> {
     return this.requestsService.findById(id);
   }
 
@@ -60,7 +60,7 @@ export class RequestsController {
   @ApiEnvelopedResponse(RequestResponseDto)
   @ApiStandardErrors()
   update(
-    @Param('id', ParseObjectIdPipe) id: string,
+    @Param('id', ParseUuidPipe) id: string,
     @Body() dto: UpdateRequestDto,
   ): Promise<RequestResponseDto> {
     return this.requestsService.update(id, dto);
@@ -70,7 +70,7 @@ export class RequestsController {
   @ApiOperation({ summary: 'Atomically confirm one unit for this request' })
   @ApiEnvelopedResponse(RequestResponseDto)
   @ApiStandardErrors()
-  confirmUnit(@Param('id', ParseObjectIdPipe) id: string): Promise<RequestResponseDto> {
+  confirmUnit(@Param('id', ParseUuidPipe) id: string): Promise<RequestResponseDto> {
     return this.requestsService.confirmUnit(id);
   }
 
@@ -78,7 +78,7 @@ export class RequestsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a blood request' })
   @ApiStandardErrors()
-  remove(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  remove(@Param('id', ParseUuidPipe) id: string): Promise<void> {
     return this.requestsService.remove(id);
   }
 }

@@ -39,7 +39,7 @@ RedRelay/
 ### 2. Small files, one job each
 - One component / service / hook / util per file. Soft limit **150 lines**, hard limit **250**.
 - No barrel file that re-exports the whole app; one `index.ts` per folder is fine.
-- No magic strings or numbers: put them in `constants/` (enums, limits, timeouts, route paths, query keys).
+- No magic strings or numbers: use constants from `constants/` (`HTTP_STATUS` in `common/constants/status-codes.constants.ts` and `shared/constants/status-codes.ts`, enums, limits, timeouts, route paths, query keys).
 - No inline config: env and settings come from typed config modules only.
 
 ### 3. TypeScript
@@ -62,7 +62,10 @@ RedRelay/
 
 ### 5. Backend rules (details in the `nest-module` skill)
 - Module layout: `controller` (HTTP only) → `service` (business logic) → `repository` (Mongo only).
-- Every endpoint: DTO with `class-validator`, Swagger decorators, auth guard + role decorator, typed response.
+- Every endpoint: DTO with `class-validator`, Swagger decorators (`@ApiEnvelopedResponse`, `@ApiPaginatedResponse`, `@ApiStandardErrors`), auth guard + role decorator, typed response.
+- All collections extend `BaseSchema` with RFC 4122 UUID v4 strings for `_id` (`generateUuid()` from `uuid` library) and timestamps (`createdAt`, `updatedAt`), never ObjectIds. Route params use `ParseUuidPipe`, DTOs use `@IsUUID()`.
+- Uniform API envelope & error format: `{ data, meta? }` and `{ error: { code, message, details, requestId, timestamp } }` via `createSuccessEnvelope` / `createErrorEnvelope`. Standard logging via `createLogger(context)`. Common Swagger setup via `setupSwagger()`.
+- HTTP status codes must come from `HTTP_STATUS` (`common/constants/status-codes.constants.ts`) or `HttpStatus` enum.
 - Business rules that matter (eligibility, compatibility, dispatch state machine) are **pure functions**
   in `*.rules.ts` / `*.policy.ts` with unit tests.
 - Concurrency-sensitive writes use atomic Mongo updates (`findOneAndUpdate` with conditions), never read-then-write.

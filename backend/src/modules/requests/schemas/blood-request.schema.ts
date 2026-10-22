@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { SchemaTypes, type HydratedDocument, type Types } from 'mongoose';
-import { baseSchemaOptions, GeoPoint, GeoPointSchema } from '../../../common';
+import type { HydratedDocument } from 'mongoose';
+import { BaseSchema, baseSchemaOptions, GeoPoint, GeoPointSchema } from '../../../common';
 import {
   BLOOD_GROUPS,
   type BloodGroup,
@@ -12,9 +12,9 @@ import {
 } from '../requests.constants';
 
 @Schema(baseSchemaOptions)
-export class BloodRequest {
-  @Prop({ type: SchemaTypes.ObjectId, ref: 'Hospital', required: true })
-  hospitalId!: Types.ObjectId;
+export class BloodRequest extends BaseSchema {
+  @Prop({ type: String, ref: 'Hospital', required: true })
+  hospitalId!: string;
 
   @Prop({ type: String, required: false })
   createdBy?: string;

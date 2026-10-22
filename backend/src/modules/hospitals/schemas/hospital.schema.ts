@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import type { HydratedDocument } from 'mongoose';
-import { baseSchemaOptions, GeoPoint, GeoPointSchema } from '../../../common';
+import { BaseSchema, baseSchemaOptions, GeoPoint, GeoPointSchema } from '../../../common';
 import {
   HOSPITAL_TYPES,
   type HospitalType,
@@ -34,7 +34,7 @@ export class HospitalVerification {
 export const HospitalVerificationSchema = SchemaFactory.createForClass(HospitalVerification);
 
 @Schema(baseSchemaOptions)
-export class Hospital {
+export class Hospital extends BaseSchema {
   @Prop({ type: String, required: true, trim: true })
   name!: string;
 

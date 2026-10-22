@@ -5,10 +5,10 @@ import {
   IsDate,
   IsEnum,
   IsInt,
-  IsMongoId,
   IsNotEmpty,
   IsOptional,
   IsString,
+  IsUUID,
   Max,
   Min,
 } from 'class-validator';
@@ -22,10 +22,10 @@ import {
 
 export class CreateRequestDto {
   @ApiProperty({
-    description: 'MongoDB ObjectId of the verified hospital creating the request.',
-    example: '6717a66b9319808a287c8e91',
+    description: 'UUID of the verified hospital creating the request.',
+    example: 'c6a99723-5e92-4114-8777-628b067d559a',
   })
-  @IsMongoId()
+  @IsUUID()
   @IsNotEmpty()
   hospitalId!: string;
 

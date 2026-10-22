@@ -16,7 +16,7 @@ import {
   ApiPaginatedResponse,
   ApiStandardErrors,
   type PaginatedResult,
-  ParseObjectIdPipe,
+  ParseUuidPipe,
 } from '../../common';
 import { CreateHospitalDto, HospitalResponseDto, QueryHospitalsDto, UpdateHospitalDto } from './dto';
 import { HospitalsService } from './hospitals.service';
@@ -46,7 +46,7 @@ export class HospitalsController {
   @ApiOperation({ summary: 'Get hospital details by ID' })
   @ApiEnvelopedResponse(HospitalResponseDto)
   @ApiStandardErrors()
-  findById(@Param('id', ParseObjectIdPipe) id: string): Promise<HospitalResponseDto> {
+  findById(@Param('id', ParseUuidPipe) id: string): Promise<HospitalResponseDto> {
     return this.hospitalsService.findById(id);
   }
 
@@ -55,7 +55,7 @@ export class HospitalsController {
   @ApiEnvelopedResponse(HospitalResponseDto)
   @ApiStandardErrors()
   update(
-    @Param('id', ParseObjectIdPipe) id: string,
+    @Param('id', ParseUuidPipe) id: string,
     @Body() dto: UpdateHospitalDto,
   ): Promise<HospitalResponseDto> {
     return this.hospitalsService.update(id, dto);
@@ -65,7 +65,7 @@ export class HospitalsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a hospital record' })
   @ApiStandardErrors()
-  remove(@Param('id', ParseObjectIdPipe) id: string): Promise<void> {
+  remove(@Param('id', ParseUuidPipe) id: string): Promise<void> {
     return this.hospitalsService.remove(id);
   }
 }

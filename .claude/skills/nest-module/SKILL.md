@@ -99,9 +99,11 @@ frontend's generated types won't match the envelope.
 | Need | Use |
 |---|---|
 | Domain error with a code | `throw new AppException(HttpStatus.CONFLICT, REQUEST_FULL, 'This request is already covered.')` |
+| Response/error envelope utils | `createSuccessEnvelope(data, meta?)`, `createErrorEnvelope(code, message, details, requestId)` |
+| Logger | `createLogger(context)` or `new AppLogger(context)` |
 | Mongo CRUD + pagination | `class XRepository extends BaseRepository<X>` → `create`, `findById`, `findOne`, `updateById`, `deleteById`, `paginate` |
-| Schema defaults | `@Schema(baseSchemaOptions)` |
-| `:id` params | `@Param('id', ParseObjectIdPipe) id: string` |
+| Schema defaults & UUID | `class X extends BaseSchema` + `@Schema(baseSchemaOptions)` (UUID `_id` default via `generateUuid()`) |
+| `:id` params | `@Param('id', ParseUuidPipe) id: string` (and `@IsUUID()` in DTOs) |
 | List query | `PaginationQueryDto`; build results with `createPaginatedResult` |
 | Swagger | `ApiEnvelopedResponse`, `ApiPaginatedResponse`, `ApiStandardErrors` |
 | Config | `config/*.config.ts` namespaces; add vars to `config/env.schema.ts` and `.env.example` |
@@ -114,17 +116,18 @@ frontend's generated types won't match the envelope.
 
 ## Standard responses
 
-Success: `{ data, meta? }` (meta for pagination). Error (from `AllExceptionsFilter`):
+Success: `{ data, meta? }` (meta for pagination). Error (from `AllExceptionsFilter` / `createErrorEnvelope`):
 
 ```json
-{ "error": { "code": "REQUEST_ALREADY_FULFILLED", "message": "This request already has all units confirmed.", "details": [], "requestId": "..." } }
+{ "error": { "code": "REQUEST_ALREADY_FULFILLED", "message": "This request already has all units confirmed.", "details": [], "requestId": "...", "timestamp": "2026-10-22T10:00:00.000Z" } }
 ```
 
 Error codes are constants in `common/constants/error-codes.ts` (generic) or `<module>.constants.ts` (domain).
 
 ## Data rules
 
-- Schemas: `timestamps: true`, `toJSON` transform removes `__v` and maps `_id` → `id`.
+- All collections use RFC 4122 UUID v4 strings for `_id` (via `BaseSchema` + `generateUuid()`), never Mongo ObjectIds.
+- Schemas: extend `BaseSchema`, `@Schema(baseSchemaOptions)`, `timestamps: true`, `toJSON` transform removes `__v` and maps `_id` → `id`.
 - Index every field used in a filter or sort; geo fields use `2dsphere`.
 - Concurrency: conditional atomic updates. Example — confirm a unit only if still needed:
   `updateOne({ _id, status: { $in: ['open','partially_matched'] }, $expr: { $lt: ['$unitsConfirmed', '$unitsNeeded'] } }, { $inc: { unitsConfirmed: 1 } })`
