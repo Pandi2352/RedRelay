@@ -24,6 +24,7 @@ live in `features/*/components`.
 | `Input`, `Textarea` | `size`: sm, md · `invalid` | `border-border-strong`, focus outline |
 | `Select` | `size`: sm, md · `multiple` · `searchable` · `clearable` · `invalid` | custom dropdown (no `<select>` tag), single & multi with chips, real-time search, keyboard navigation |
 | `DatePicker` | `size`: sm, md · `clearable` · `showPresets` · `minDate` · `maxDate` | custom calendar popover, quick presets (Today, Tomorrow, +3d, +1w), month nav |
+| `TimePicker` | `size`: sm, md · `format`: 12h, 24h · `minuteStep` · `clearable` · `showPresets` | custom time columns (hrs, mins, secs, AM/PM), quick presets (Now, 09:00, 12:00, 18:00) |
 | `Field` | wraps label + control + hint + error | used by every form field |
 | `Checkbox`, `Radio`, `Switch` | — | switch thumb is the one `rounded-full` control |
 | `Badge` | `tone`: neutral, primary, secondary, success, warning, danger · `variant`: soft, solid | text always present |

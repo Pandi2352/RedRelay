@@ -12,3 +12,4 @@ export * from './select';
 export * from './skeleton';
 export * from './spinner';
 export * from './textarea';
+export * from './time-picker';
