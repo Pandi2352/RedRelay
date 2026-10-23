@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { Provider } from 'react-redux';
+import { AuthBootstrap } from '@/features/auth';
 import { useThemeSync } from '@/shared/hooks';
 import { store } from './store';
 
@@ -12,6 +13,7 @@ export function AppProviders({ children }: { children: ReactNode }) {
   return (
     <Provider store={store}>
       <ThemeSync />
+      <AuthBootstrap />
       {children}
     </Provider>
   );

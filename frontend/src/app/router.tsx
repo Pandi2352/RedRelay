@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router';
+import { authRoutes, AuthNav } from '@/features/auth';
 import { homeRoutes } from '@/features/home';
 import { hospitalRoutes } from '@/features/hospitals';
 import { requestRoutes } from '@/features/requests';
@@ -9,9 +10,10 @@ import { Brand, MainNav } from './nav';
 
 export const router = createBrowserRouter([
   {
-    element: <AppShell brand={<Brand />} nav={<MainNav />} />,
+    element: <AppShell brand={<Brand />} nav={<MainNav />} actions={<AuthNav />} />,
     errorElement: <RouteErrorPage />,
     children: [
+      ...authRoutes,
       ...homeRoutes,
       ...requestRoutes,
       ...hospitalRoutes,

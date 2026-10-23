@@ -8,4 +8,6 @@ export const ROUTES = {
   requests: '/requests',
   requestNew: '/requests/new',
   requestDetail: (id: string) => `/requests/${id}` as const,
+  login: '/login',
+  register: '/register',
 } as const;
